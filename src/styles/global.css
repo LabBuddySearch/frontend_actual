@@ -22,7 +22,7 @@ body {
   font-weight: 400;
 
   color: var(--text-primary);
-  background-color: #fff;
+  background-color: var(--bg-main);
 
   margin: 0;
   padding: 0;
