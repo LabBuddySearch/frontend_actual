@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -12,5 +13,7 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
+    host: '127.0.0.1',
+    cors: true,
   },
 });
