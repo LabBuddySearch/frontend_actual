@@ -1,0 +1,1 @@
+export const Tasks = () => <div><h1>Задачи</h1><p>Здесь пока пусто</p></div>;

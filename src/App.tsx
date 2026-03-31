@@ -1,5 +1,7 @@
-function App() {
-  return <div>alo</div>;
-}
+import { RouterProvider } from 'react-router-dom';
 
-export default App;
+import { router } from '@/app/router';
+
+export function App() {
+  return <RouterProvider router={router} />;
+}
