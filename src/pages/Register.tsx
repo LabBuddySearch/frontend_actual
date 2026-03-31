@@ -42,6 +42,7 @@ export const Register = () => {
   const onSubmit = (data: RegisterFormValues) => {
     const payload = { ...data, role };
     console.log('Отправка данных регистрации:', payload);
+    // TODO: API; после успеха — navigate('/login') или '/verify-email'
   };
 
   return (

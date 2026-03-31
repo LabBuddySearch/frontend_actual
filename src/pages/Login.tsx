@@ -3,7 +3,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Eye, EyeOff } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { matchTestAccount } from '@/config/testAccounts';
+import { useAuthStore } from '@/store/authStore';
 import styles from './Login.module.css';
 
 const loginSchema = z.object({
@@ -15,18 +17,30 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const login = useAuthStore((s) => s.login);
 
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
 
   const onSubmit = (data: LoginFormValues) => {
-    console.log('Отправка данных авторизации:', data);
-    // TODO: вызов экшена из zustand и axios
+    clearErrors('root');
+    const account = matchTestAccount(data.username, data.password);
+    if (!account) {
+      setError('root', { message: 'Неверный логин или пароль' });
+      return;
+    }
+    login(account.username, account.fullName, account.role, account.group);
+    const home =
+      account.role === 'teacher' ? '/teacher' : account.role === 'admin' ? '/admin' : '/student';
+    navigate(home);
   };
 
   return (
@@ -83,6 +97,12 @@ export const Login = () => {
               <span className={styles.errorText}>{errors.password.message}</span>
             )}
           </div>
+
+          {errors.root && (
+            <span className={styles.errorText} role="alert">
+              {errors.root.message}
+            </span>
+          )}
 
           <button type="submit" className={styles.submitBtn}>
             Войти
