@@ -11,6 +11,7 @@ import { TeacherDashboardPage } from '@/pages/teacher/TeacherDashboardPage';
 import { TeacherSectionPlaceholder } from '@/pages/teacher/TeacherSectionPlaceholder';
 import { AdminDashboardPage } from '@/pages/admin/AdminDashboardPage';
 import { AdminSectionPlaceholder } from '@/pages/admin/AdminSectionPlaceholder';
+import { RoleProfilePage } from '@/pages/profile/RoleProfilePage';
 import { VerifyEmailPage } from '@/pages/verify-email/VerifyEmailPage';
 
 export const router = createBrowserRouter([
@@ -26,6 +27,7 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <AdminDashboardPage /> },
+      { path: 'profile', element: <RoleProfilePage variant="admin" /> },
       { path: 'students', element: <AdminSectionPlaceholder title="Студенты" /> },
       { path: 'teachers', element: <AdminSectionPlaceholder title="Преподаватели" /> },
       { path: 'tasks', element: <AdminSectionPlaceholder title="Задачи" /> },
@@ -40,7 +42,7 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <TeacherDashboardPage /> },
-      { path: 'profile', element: <TeacherSectionPlaceholder title="Профиль" /> },
+      { path: 'profile', element: <RoleProfilePage variant="teacher" /> },
       { path: 'tasks', element: <TeacherSectionPlaceholder title="Задачи" /> },
     ],
   },
@@ -53,7 +55,7 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <StudentDashboardPage /> },
-      { path: 'profile', element: <StudentSectionPlaceholder title="Профиль" /> },
+      { path: 'profile', element: <RoleProfilePage variant="student" /> },
       { path: 'tasks', element: <StudentSectionPlaceholder title="Задачи" /> },
     ],
   },

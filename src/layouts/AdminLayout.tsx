@@ -8,6 +8,7 @@ import {
   Search,
   Settings,
   Terminal,
+  User,
   Users,
   X,
 } from 'lucide-react';
@@ -45,6 +46,10 @@ export function AdminLayout() {
       <NavLink className={sidebarLinkClass} end to="/admin" onClick={closeMobile}>
         <LayoutDashboard aria-hidden className="size-5 shrink-0" strokeWidth={1.75} />
         Дашборд
+      </NavLink>
+      <NavLink className={sidebarLinkClass} to="/admin/profile" onClick={closeMobile}>
+        <User aria-hidden className="size-5 shrink-0" strokeWidth={1.75} />
+        Профиль
       </NavLink>
       <NavLink className={sidebarLinkClass} to="/admin/students" onClick={closeMobile}>
         <GraduationCap aria-hidden className="size-5 shrink-0" strokeWidth={1.75} />
