@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AtSign, KeyRound, Lock, Mail, User } from 'lucide-react';
+import { useAuthStore } from '@/store/authStore';
+import { registerUser } from '@/shared/api/auth';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-
-import { postTeacherRegister } from '@/shared/api/register';
 
 import {
   type TeacherRegisterFormValues,
@@ -18,7 +18,7 @@ type TeacherRegisterFormProps = {
 
 export function TeacherRegisterForm({ onSuccess }: TeacherRegisterFormProps) {
   const [apiError, setApiError] = useState<string | null>(null);
-
+  const loginAction = useAuthStore((state) => state.login);
   const {
     register,
     handleSubmit,
@@ -40,19 +40,22 @@ export function TeacherRegisterForm({ onSuccess }: TeacherRegisterFormProps) {
   const onSubmit = async (data: TeacherRegisterFormValues) => {
     setApiError(null);
     try {
-      await postTeacherRegister({
+      const payload = {
+        role: 'TEACHER',
         fullName: data.fullName,
-        username: data.username,
         email: data.email,
         password: data.password,
-      });
+      };
+      
+      const response = await registerUser(payload);
+      loginAction(response.accessToken, response.user);
+      
       reset();
       onSuccess?.();
     } catch (e) {
-      const msg =
-        axios.isAxiosError(e) && e.response?.data && typeof e.response.data === 'object'
-          ? String((e.response.data as { error?: string }).error ?? e.message)
-          : 'Не удалось отправить запрос. Запустите сервер API (npm run dev:server) и попробуйте снова.';
+      const msg = axios.isAxiosError(e) && e.response?.data && typeof e.response.data === 'object'
+        ? String((e.response.data as { message?: string }).message ?? e.message)
+        : 'Не удалось отправить запрос.';
       setApiError(msg);
     }
   };

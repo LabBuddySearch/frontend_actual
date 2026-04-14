@@ -1,6 +1,8 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
-import { GuestLogin, GuestRegister, ProtectedRoute } from '@/app/route-guards';
+import { ProtectedRoute } from '@/app/route-guards';
+import { LoginPage } from '@/pages/login/LoginPage';
+import { RegisterPage } from '@/pages/register/RegisterPage';
 import { AdminLayout } from '@/layouts/AdminLayout';
 import { StudentLayout } from '@/layouts/StudentLayout';
 import { TeacherLayout } from '@/layouts/TeacherLayout';
@@ -17,12 +19,12 @@ import { VerifyEmailPage } from '@/pages/verify-email/VerifyEmailPage';
 
 export const router = createBrowserRouter([
   { path: '/', element: <Navigate to="/login" replace /> },
-  { path: '/login', element: <GuestLogin /> },
-  { path: '/register', element: <GuestRegister /> },
+{ path: '/login', element: <LoginPage /> },
+{ path: '/register', element: <RegisterPage /> },
   {
     path: '/admin',
     element: (
-      <ProtectedRoute allowedRole="admin">
+      <ProtectedRoute allowedRole="ADMIN">
         <AdminLayout />
       </ProtectedRoute>
     ),
@@ -37,7 +39,7 @@ export const router = createBrowserRouter([
   {
     path: '/teacher',
     element: (
-      <ProtectedRoute allowedRole="teacher">
+      <ProtectedRoute allowedRole="TEACHER">
         <TeacherLayout />
       </ProtectedRoute>
     ),
@@ -50,7 +52,7 @@ export const router = createBrowserRouter([
   {
     path: '/student',
     element: (
-      <ProtectedRoute allowedRole="student">
+      <ProtectedRoute allowedRole="STUDENT">
         <StudentLayout />
       </ProtectedRoute>
     ),

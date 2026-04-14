@@ -1,40 +1,45 @@
 import { Navigate } from 'react-router-dom';
-
-import type { TestRole } from '@/config/testAccounts';
-import { Login } from '@/pages/Login';
-import { Register } from '@/pages/Register';
 import { useAuthStore } from '@/store/authStore';
+import { LoginPage } from '@/pages/login/LoginPage';
+import { RegisterPage } from '@/pages/register/RegisterPage';
 
-function authedHome(role: TestRole | null) {
-  if (role === 'teacher') return '/teacher';
-  if (role === 'admin') return '/admin';
-  return '/student';
-}
+export function ProtectedRoute({ children, allowedRole }: { children: React.ReactNode, allowedRole: string }) {
+  const isAuth = useAuthStore((state) => state.isAuth);
+  const user = useAuthStore((state) => state.user);
 
-export function ProtectedRoute({
-  children,
-  allowedRole,
-}: {
-  children: React.ReactNode;
-  allowedRole: TestRole;
-}) {
-  const isAuth = useAuthStore((s) => s.isAuth);
-  const role = useAuthStore((s) => s.role);
-  if (!isAuth || !role) return <Navigate to="/login" replace />;
-  if (role !== allowedRole) return <Navigate to={authedHome(role)} replace />;
+  if (!isAuth) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (user?.role !== allowedRole && user?.role !== allowedRole.toUpperCase()) {
+    return <Navigate to="/" replace />; 
+  }
+
   return <>{children}</>;
 }
 
 export function GuestLogin() {
-  const isAuth = useAuthStore((s) => s.isAuth);
-  const role = useAuthStore((s) => s.role);
-  if (isAuth && role) return <Navigate to={authedHome(role)} replace />;
-  return <Login />;
+  const isAuth = useAuthStore((state) => state.isAuth);
+  const user = useAuthStore((state) => state.user);
+  
+  if (isAuth && user) {
+    if (user.role === 'TEACHER') return <Navigate to="/teacher" replace />;
+    if (user.role === 'ADMIN') return <Navigate to="/admin" replace />;
+    return <Navigate to="/student" replace />;
+  }
+  
+  return <LoginPage />; 
 }
 
 export function GuestRegister() {
-  const isAuth = useAuthStore((s) => s.isAuth);
-  const role = useAuthStore((s) => s.role);
-  if (isAuth && role) return <Navigate to={authedHome(role)} replace />;
-  return <Register />;
+  const isAuth = useAuthStore((state) => state.isAuth);
+  const user = useAuthStore((state) => state.user);
+  
+  if (isAuth && user) {
+    if (user.role === 'TEACHER') return <Navigate to="/teacher" replace />;
+    if (user.role === 'ADMIN') return <Navigate to="/admin" replace />;
+    return <Navigate to="/student" replace />;
+  }
+  
+  return <RegisterPage />; 
 }

@@ -1,17 +1,20 @@
+// src/pages/login/LoginPage.tsx
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-import { mockAuthenticate } from '@/shared/auth/test-accounts';
-
+import { loginUser } from '@/shared/api/auth';
+import { useAuthStore } from '@/store/authStore';
 import { type LoginFormValues, loginSchema } from './login.schema';
 
 export function LoginPage() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
+  const loginAction = useAuthStore((state) => state.login);
 
   const {
     register,
@@ -19,20 +22,27 @@ export function LoginPage() {
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { username: '', password: '' },
+    defaultValues: { email: '', password: '' },
   });
 
   const onSubmit = async (data: LoginFormValues) => {
     setAuthError(null);
-    await new Promise((r) => setTimeout(r, 300));
-    const role = mockAuthenticate(data.username, data.password);
-    if (!role) {
-      setAuthError('Неверный логин или пароль');
-      return;
+    try {
+      const response = await loginUser({ email: data.email, password: data.password });
+      
+      loginAction(response.accessToken, response.user);
+      
+      if (response.user.role === 'STUDENT') navigate('/student');
+      else if (response.user.role === 'TEACHER') navigate('/teacher');
+      else navigate('/');
+      
+    } catch (e) {
+      if (axios.isAxiosError(e) && e.response?.status === 403) {
+        setAuthError('Неверный email или пароль');
+      } else {
+        setAuthError('Ошибка подключения к серверу');
+      }
     }
-    if (role === 'student') navigate('/student');
-    else navigate('/teacher');
-    // TODO: POST /auth/login и редирект по ответу сервера
   };
 
   return (
@@ -40,12 +50,8 @@ export function LoginPage() {
       <div className="w-full max-w-[440px] overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xl dark:border-border-dark dark:bg-card-dark">
         <div className="p-8">
           <div className="mb-8">
-            <h1 className="mb-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">
-              Авторизация
-            </h1>
-            <p className="text-sm text-slate-600 dark:text-text-secondary">
-              Введите свои данные для входа в аккаунт
-            </p>
+            <h1 className="mb-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">Авторизация</h1>
+            <p className="text-sm text-slate-600 dark:text-text-secondary">Введите свои данные для входа в аккаунт</p>
           </div>
 
           <form className="space-y-6" noValidate onSubmit={handleSubmit(onSubmit)}>
@@ -55,41 +61,28 @@ export function LoginPage() {
               </p>
             )}
             <div className="flex flex-col gap-2">
-              <label
-                className="text-sm font-medium text-slate-700 dark:text-slate-200"
-                htmlFor="login-username"
-              >
-                Логин (username)
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="login-email">
+                Email
               </label>
               <input
-                id="login-username"
-                autoComplete="username"
+                id="login-email"
+                autoComplete="email"
                 className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-primary focus:ring-1 focus:ring-primary dark:border-border-dark dark:bg-background-dark dark:text-slate-100 dark:placeholder:text-text-secondary/50"
-                placeholder="Введите ваш логин"
-                type="text"
-                {...register('username')}
+                placeholder="you@example.com"
+                type="email"
+                {...register('email')}
               />
-              {errors.username && (
-                <p className="text-sm text-red-500 dark:text-red-400" role="alert">
-                  {errors.username.message}
-                </p>
+              {errors.email && (
+                <p className="text-sm text-red-500 dark:text-red-400" role="alert">{errors.email.message}</p>
               )}
             </div>
 
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <label
-                  className="text-sm font-medium text-slate-700 dark:text-slate-200"
-                  htmlFor="login-password"
-                >
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-200" htmlFor="login-password">
                   Пароль
                 </label>
-                <Link
-                  className="text-xs text-primary hover:underline"
-                  to="/forgot-password"
-                >
-                  Забыли пароль?
-                </Link>
+                <Link className="text-xs text-primary hover:underline" to="/forgot-password">Забыли пароль?</Link>
               </div>
               <div className="relative flex items-center">
                 <input
@@ -106,17 +99,11 @@ export function LoginPage() {
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
                 >
-                  {showPassword ? (
-                    <EyeOff aria-hidden className="size-[22px]" strokeWidth={1.75} />
-                  ) : (
-                    <Eye aria-hidden className="size-[22px]" strokeWidth={1.75} />
-                  )}
+                  {showPassword ? <EyeOff aria-hidden className="size-[22px]" strokeWidth={1.75} /> : <Eye aria-hidden className="size-[22px]" strokeWidth={1.75} />}
                 </button>
               </div>
               {errors.password && (
-                <p className="text-sm text-red-500 dark:text-red-400" role="alert">
-                  {errors.password.message}
-                </p>
+                <p className="text-sm text-red-500 dark:text-red-400" role="alert">{errors.password.message}</p>
               )}
             </div>
 
@@ -131,10 +118,7 @@ export function LoginPage() {
 
           <div className="mt-8 border-t border-slate-200 pt-6 text-center dark:border-border-dark">
             <p className="text-sm text-slate-600 dark:text-text-secondary">
-              Нет аккаунта?
-              <Link className="ml-1 font-medium text-primary hover:underline" to="/register">
-                Зарегистрироваться
-              </Link>
+              Нет аккаунта? <Link className="ml-1 font-medium text-primary hover:underline" to="/register">Зарегистрироваться</Link>
             </p>
           </div>
         </div>

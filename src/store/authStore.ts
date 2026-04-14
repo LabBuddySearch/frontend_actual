@@ -1,24 +1,22 @@
 import { create } from 'zustand';
-
-import type { TestRole } from '@/config/testAccounts';
+import type { UserData } from '@/shared/api/auth';
 
 interface AuthState {
   isAuth: boolean;
-  username: string;
-  fullName: string;
-  group: string;
-  role: TestRole | null;
-  login: (username: string, fullName: string, role: TestRole, group?: string) => void;
+  user: UserData | null;
+  login: (token: string, userData: UserData) => void;
   logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  isAuth: false,
-  username: '',
-  fullName: '',
-  group: '',
-  role: null,
-  login: (username, fullName, role, group) =>
-    set({ isAuth: true, username, fullName, group: group ?? '', role }),
-  logout: () => set({ isAuth: false, username: '', fullName: '', group: '', role: null }),
+  isAuth: !!localStorage.getItem('accessToken'),
+  user: null,
+  login: (token, userData) => {
+    localStorage.setItem('accessToken', token);
+    set({ isAuth: true, user: userData });
+  },
+  logout: () => {
+    localStorage.removeItem('accessToken');
+    set({ isAuth: false, user: null });
+  },
 }));

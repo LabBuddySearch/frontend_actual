@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AtSign, KeyRound, Lock, Mail, User, Users } from 'lucide-react';
+import { useAuthStore } from '@/store/authStore';
+import { registerUser } from '@/shared/api/auth';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-
-import { postStudentRegister } from '@/shared/api/register';
 
 import {
   type StudentRegisterFormValues,
@@ -18,7 +18,7 @@ type StudentRegisterFormProps = {
 
 export function StudentRegisterForm({ onSuccess }: StudentRegisterFormProps) {
   const [apiError, setApiError] = useState<string | null>(null);
-
+  const loginAction = useAuthStore((state) => state.login);
   const {
     register,
     handleSubmit,
@@ -41,20 +41,24 @@ export function StudentRegisterForm({ onSuccess }: StudentRegisterFormProps) {
   const onSubmit = async (data: StudentRegisterFormValues) => {
     setApiError(null);
     try {
-      await postStudentRegister({
+      const payload = {
+        role: 'STUDENT',
         fullName: data.fullName,
-        username: data.username,
         email: data.email,
         password: data.password,
-        groupCode: data.groupCode,
-      });
+        student_group: data.groupCode,
+      };
+      
+      const response = await registerUser(payload);
+      
+      loginAction(response.accessToken, response.user);
+      
       reset();
       onSuccess?.();
     } catch (e) {
-      const msg =
-        axios.isAxiosError(e) && e.response?.data && typeof e.response.data === 'object'
-          ? String((e.response.data as { error?: string }).error ?? e.message)
-          : 'Не удалось отправить запрос. Запустите сервер API (npm run dev:server) и попробуйте снова.';
+      const msg = axios.isAxiosError(e) && e.response?.data && typeof e.response.data === 'object'
+        ? String((e.response.data as { message?: string }).message ?? e.message)
+        : 'Не удалось отправить запрос.';
       setApiError(msg);
     }
   };
