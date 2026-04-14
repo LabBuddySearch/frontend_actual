@@ -16,7 +16,9 @@ export function StudentLayout() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
   const navigate = useNavigate();
-  const [logout, fullName] = useAuthStore(useShallow((state) => [state.logout, state.fullName]));
+  const [logout, fullName] = useAuthStore(
+    useShallow((state) => [state.logout, state.user?.fullName ?? '']),
+  );
 
   const closeMobile = () => setMobileNavOpen(false);
 
@@ -119,15 +121,19 @@ export function StudentLayout() {
                 <p className="text-sm font-semibold">Привет, {fullName}!</p>
                 <p className="text-xs text-slate-400">С возвращением</p>
               </div>
-              <div className="relative cursor-pointer">
-                <div
+              <NavLink
+                to="/student/profile"
+                className="relative flex cursor-pointer items-center justify-center rounded-full outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background-dark"
+                aria-label="Профиль"
+              >
+                <span
                   aria-hidden
                   className="flex size-10 items-center justify-center rounded-full border-2 border-primary/30 bg-surface text-slate-400"
                 >
                   <User className="size-5" strokeWidth={1.5} />
-                </div>
-                <div className="absolute right-0 bottom-0 size-3 rounded-full border-2 border-background-dark bg-green-500" />
-              </div>
+                </span>
+                <span className="absolute right-0 bottom-0 size-3 rounded-full border-2 border-background-dark bg-green-500" aria-hidden />
+              </NavLink>
             </div>
           </div>
         </header>

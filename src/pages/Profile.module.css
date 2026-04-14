@@ -11,10 +11,22 @@
   border: 1px solid var(--input-border);
   border-radius: 12px;
   padding: 32px;
-  display: flex;
-  align-items: center;
-  gap: 32px;
   position: relative;
+}
+
+/* Слева аватар сверху колонки, справа поля профиля */
+.profileCardRow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.avatarColumn {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .avatarLg {
@@ -23,6 +35,11 @@
   border-radius: 12px;
   background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); /* Красивый градиент вместо картинки */
   flex-shrink: 0;
+}
+
+.profileMain {
+  flex: 1;
+  min-width: 0;
 }
 
 .infoSection {
@@ -64,6 +81,24 @@
   font-size: 18px;
   color: var(--primary-color);
   font-family: monospace;
+  display: inline-block;
+  text-align: right;
+}
+
+/* Правая колонка: кнопка сверху, логин под ней */
+.profileSideColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.profileLoginBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
 }
 
 .editBtn {
@@ -75,11 +110,124 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
-  align-self: flex-end; /* Опускаем кнопку вниз */
 }
 
 .editBtn:hover {
   background-color: var(--primary-hover);
+}
+
+.secondaryBtn {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--input-border);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.secondaryBtn:hover {
+  background-color: var(--input-border);
+}
+
+.editForm {
+  flex: 1;
+  min-width: 0;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 16px 24px;
+}
+
+@media (min-width: 640px) {
+  .formGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldLabel {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--input-border);
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 15px;
+  font-family: inherit;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+.textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.inputMono {
+  font-family: ui-monospace, monospace;
+}
+
+.fieldError {
+  font-size: 13px;
+  color: #f85149;
+  margin: 0;
+}
+
+.formActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+
+.roleHint {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0 0 16px;
+}
+
+.customBlock {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--input-border);
+}
+
+.customTitle {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin: 0 0 8px;
 }
 
 /* Секция истории */

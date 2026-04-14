@@ -5,6 +5,7 @@ import * as z from 'zod';
 import { Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { matchTestAccount } from '@/config/testAccounts';
+import type { UserData } from '@/shared/api/auth';
 import { useAuthStore } from '@/store/authStore';
 import styles from './Login.module.css';
 
@@ -37,7 +38,16 @@ export const Login = () => {
       setError('root', { message: 'Неверный логин или пароль' });
       return;
     }
-    login(account.username, account.fullName, account.role, account.group);
+    const roleMap = { student: 'STUDENT', teacher: 'TEACHER', admin: 'ADMIN' } as const;
+    const userData: UserData = {
+      id: account.username === 'Admin' ? 1 : account.username === 'Vikki' ? 2 : 3,
+      email: account.email ?? `${account.username.toLowerCase()}@local.test`,
+      fullName: account.fullName,
+      role: roleMap[account.role],
+      username: account.username,
+      studentGroup: account.group?.trim() || undefined,
+    };
+    login(`local-dev-${account.username}`, userData);
     const home =
       account.role === 'teacher' ? '/teacher' : account.role === 'admin' ? '/admin' : '/student';
     navigate(home);

@@ -50,8 +50,12 @@ export function StudentRegisterForm({ onSuccess }: StudentRegisterFormProps) {
       };
       
       const response = await registerUser(payload);
-      
-      loginAction(response.accessToken, response.user);
+
+      loginAction(response.accessToken, {
+        ...response.user,
+        username: data.username.trim(),
+        studentGroup: data.groupCode.trim() || undefined,
+      });
       
       reset();
       onSuccess?.();

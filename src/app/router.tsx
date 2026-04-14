@@ -6,7 +6,6 @@ import { RegisterPage } from '@/pages/register/RegisterPage';
 import { AdminLayout } from '@/layouts/AdminLayout';
 import { StudentLayout } from '@/layouts/StudentLayout';
 import { TeacherLayout } from '@/layouts/TeacherLayout';
-import { ComingSoonPage } from '@/pages/coming-soon/ComingSoonPage';
 import { StudentDashboardPage } from '@/pages/student/StudentDashboardPage';
 import { StudentTasksPage } from '@/pages/student/StudentTasksPage';
 import { StudentTaskIdePage } from '@/pages/student/StudentTaskIdePage';
@@ -14,8 +13,10 @@ import { TeacherDashboardPage } from '@/pages/teacher/TeacherDashboardPage';
 import { TeacherSectionPlaceholder } from '@/pages/teacher/TeacherSectionPlaceholder';
 import { AdminDashboardPage } from '@/pages/admin/AdminDashboardPage';
 import { AdminSectionPlaceholder } from '@/pages/admin/AdminSectionPlaceholder';
+import { AdminUserManagementPage } from '@/pages/admin/AdminUserManagementPage';
 import { RoleProfilePage } from '@/pages/profile/RoleProfilePage';
 import { VerifyEmailPage } from '@/pages/verify-email/VerifyEmailPage';
+import { ForgotPasswordPage } from '@/pages/forgot-password/ForgotPasswordPage';
 
 export const router = createBrowserRouter([
   { path: '/', element: <Navigate to="/login" replace /> },
@@ -31,8 +32,8 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <AdminDashboardPage /> },
       { path: 'profile', element: <RoleProfilePage variant="admin" /> },
-      { path: 'students', element: <AdminSectionPlaceholder title="Студенты" /> },
-      { path: 'teachers', element: <AdminSectionPlaceholder title="Преподаватели" /> },
+      { path: 'students', element: <AdminUserManagementPage variant="students" /> },
+      { path: 'teachers', element: <AdminUserManagementPage variant="teachers" /> },
       { path: 'tasks', element: <AdminSectionPlaceholder title="Задачи" /> },
     ],
   },
@@ -69,5 +70,5 @@ export const router = createBrowserRouter([
     ],
   },
   { path: '/verify-email', element: <VerifyEmailPage /> },
-  { path: '/forgot-password', element: <ComingSoonPage title="Восстановление пароля" /> },
+  { path: '/forgot-password', element: <ForgotPasswordPage /> },
 ]);

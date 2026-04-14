@@ -18,6 +18,16 @@ export type UserData = {
   email: string;
   fullName: string;
   role: 'STUDENT' | 'TEACHER' | 'ADMIN';
+  /** Логин с регистрации; если бэкенд не отдаёт — можно задать на клиенте */
+  username?: string;
+  /** Код группы (студент) */
+  studentGroup?: string;
+  /** Увлечения и интересы (студент) */
+  studentHobbies?: string;
+  /** Преподаваемый предмет (преподаватель) */
+  teacherSubject?: string;
+  /** Доп. информация (администратор) */
+  adminNote?: string;
 };
 
 export type AuthResponse = {
@@ -29,6 +39,14 @@ export type AuthResponse = {
 
 export async function loginUser(payload: { email: string; password: string }) {
   const { data } = await api.post<AuthResponse>('/api/auth/login', payload);
+  return data;
+}
+
+export async function requestPasswordReset(payload: { email: string }) {
+  const { data } = await api.post<{ ok?: boolean; message?: string }>(
+    '/api/auth/forgot-password',
+    payload,
+  );
   return data;
 }
 
