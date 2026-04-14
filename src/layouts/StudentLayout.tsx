@@ -1,25 +1,14 @@
-import {
-  LayoutDashboard,
-  ListTodo,
-  LogOut,
-  Menu,
-  Terminal,
-  User,
-  X,
-} from 'lucide-react';
+import { LayoutDashboard, ListTodo, LogOut, Menu, Terminal, User, X } from 'lucide-react';
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 
 import { LogoutConfirmModal } from '@/components/LogoutConfirmModal';
 import { useAuthStore } from '@/store/authStore';
-
-const STUDENT_NAME = 'Алексей';
+import { useShallow } from 'zustand/shallow';
 
 function navLinkClass({ isActive }: { isActive: boolean }) {
   return `flex items-center gap-3 rounded-lg px-4 py-3 text-sm transition-colors ${
-    isActive
-      ? 'bg-primary/10 font-medium text-primary'
-      : 'text-slate-400 hover:bg-white/5 hover:text-slate-100'
+    isActive ? 'bg-primary/10 font-medium text-primary' : 'text-slate-400 hover:bg-white/5 hover:text-slate-100'
   }`;
 }
 
@@ -27,7 +16,7 @@ export function StudentLayout() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [logoutOpen, setLogoutOpen] = useState(false);
   const navigate = useNavigate();
-  const logout = useAuthStore((s) => s.logout);
+  const [logout, fullName] = useAuthStore(useShallow((state) => [state.logout, state.fullName]));
 
   const closeMobile = () => setMobileNavOpen(false);
 
@@ -127,7 +116,7 @@ export function StudentLayout() {
             </div>
             <div className="flex items-center gap-4">
               <div className="hidden text-right sm:block">
-                <p className="text-sm font-semibold">Привет, {STUDENT_NAME}!</p>
+                <p className="text-sm font-semibold">Привет, {fullName}!</p>
                 <p className="text-xs text-slate-400">С возвращением</p>
               </div>
               <div className="relative cursor-pointer">
@@ -148,11 +137,7 @@ export function StudentLayout() {
         </div>
       </div>
 
-      <LogoutConfirmModal
-        open={logoutOpen}
-        onConfirm={handleLogout}
-        onOpenChange={setLogoutOpen}
-      />
+      <LogoutConfirmModal open={logoutOpen} onConfirm={handleLogout} onOpenChange={setLogoutOpen} />
     </div>
   );
 }
