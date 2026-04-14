@@ -1,10 +1,13 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, User, ListTodo, LogOut, SquareTerminal } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
+import { displayLoginFromUser } from '@/shared/lib/user-display';
 import styles from './MainLayout.module.css';
 
 export const MainLayout = () => {
-  const { username, logout } = useAuthStore();
+  const user = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
+  const username = displayLoginFromUser(user);
   const navigate = useNavigate();
 
   const handleLogout = () => {

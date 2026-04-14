@@ -15,6 +15,25 @@ const APP_URL = process.env.APP_URL ?? 'http://127.0.0.1:3000';
 /** @type {Map<string, { email: string; role: string }>} */
 const pendingTokens = new Map();
 
+/** Тестовые пользователи для POST /api/auth/login (только dev-сервер) */
+const DEV_LOGIN_USERS = [
+  {
+    email: 'adm@adm.adm',
+    password: 'Admin1234',
+    user: { id: 1, email: 'adm@adm.adm', fullName: 'Администратор', role: 'ADMIN' },
+  },
+  {
+    email: 'vikki@vikki.vikki',
+    password: 'Vika2005',
+    user: { id: 2, email: 'vikki@vikki.vikki', fullName: 'Виктория', role: 'STUDENT' },
+  },
+  {
+    email: 'prepod@prepod.prepod',
+    password: 'Test1234',
+    user: { id: 3, email: 'prepod@prepod.prepod', fullName: 'Андрей Борисович', role: 'TEACHER' },
+  },
+];
+
 function createTransport() {
   const host = process.env.SMTP_HOST;
   if (!host) return null;
@@ -87,6 +106,27 @@ function handleRegister(role, roleLabel) {
   };
 }
 
+app.post('/api/auth/login', (req, res) => {
+  const body = req.body ?? {};
+  const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
+  const password = typeof body.password === 'string' ? body.password : '';
+
+  const row = DEV_LOGIN_USERS.find(
+    (u) => u.email.toLowerCase() === email && u.password === password,
+  );
+  if (!row) {
+    return res.status(403).json({ error: 'Неверный email или пароль' });
+  }
+
+  const accessToken = crypto.randomBytes(32).toString('hex');
+  res.json({
+    accessToken,
+    tokenType: 'Bearer',
+    expiresInMs: 86_400_000,
+    user: row.user,
+  });
+});
+
 app.post('/api/auth/register/student', handleRegister('student', 'студент'));
 app.post('/api/auth/register/teacher', handleRegister('teacher', 'преподаватель'));
 
@@ -105,5 +145,5 @@ app.get('/api/auth/verify-email', (req, res) => {
 });
 
 app.listen(PORT, '127.0.0.1', () => {
-  console.log(`Register API: http://127.0.0.1:${PORT}`);
+  console.log(`API (register + login): http://127.0.0.1:${PORT}`);
 });

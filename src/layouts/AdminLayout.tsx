@@ -31,7 +31,7 @@ export function AdminLayout() {
   const [logoutOpen, setLogoutOpen] = useState(false);
   const navigate = useNavigate();
   const logout = useAuthStore((s) => s.logout);
-  const fullName = useAuthStore((s) => s.fullName);
+  const fullName = useAuthStore((s) => s.user?.fullName ?? '');
 
   const closeMobile = () => setMobileNavOpen(false);
 
@@ -170,14 +170,18 @@ export function AdminLayout() {
                 </span>
                 <span className="text-xs text-slate-500">Super Admin</span>
               </div>
-              <div className="rounded-full border border-primary/50 bg-primary/20 p-0.5">
-                <div
+              <NavLink
+                to="/admin/profile"
+                className="rounded-full border border-primary/50 bg-primary/20 p-0.5 outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+                aria-label="Профиль"
+              >
+                <span
                   aria-hidden
                   className="flex size-10 items-center justify-center rounded-full border-2 border-surface bg-slate-800 text-slate-400"
                 >
                   <Users className="size-5" strokeWidth={1.5} />
-                </div>
-              </div>
+                </span>
+              </NavLink>
             </div>
           </div>
         </header>

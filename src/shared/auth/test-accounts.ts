@@ -4,7 +4,7 @@
 export type TestAccountRole = 'student' | 'teacher';
 
 const STUDENT = { username: 'Vikki', password: 'Vika2005' } as const;
-const TEACHER = { username: 'Prepod', password: 'Test1234' } as const;
+const TEACHER = { username: 'prepod@prepod.prepod', password: 'Test1234' } as const;
 
 export function mockAuthenticate(
   username: string,

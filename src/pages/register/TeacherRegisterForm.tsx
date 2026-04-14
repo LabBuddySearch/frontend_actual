@@ -48,7 +48,10 @@ export function TeacherRegisterForm({ onSuccess }: TeacherRegisterFormProps) {
       };
       
       const response = await registerUser(payload);
-      loginAction(response.accessToken, response.user);
+      loginAction(response.accessToken, {
+        ...response.user,
+        username: data.username.trim(),
+      });
       
       reset();
       onSuccess?.();

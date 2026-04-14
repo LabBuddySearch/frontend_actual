@@ -3,6 +3,8 @@ export type TestRole = 'student' | 'teacher' | 'admin';
 
 export const TEST_ACCOUNTS: ReadonlyArray<{
   username: string;
+  /** Email для страницы входа через API (см. dev-сервер `server/index.mjs`) */
+  email?: string;
   password: string;
   role: TestRole;
   fullName: string;
@@ -10,19 +12,22 @@ export const TEST_ACCOUNTS: ReadonlyArray<{
 }> = [
   {
     username: 'Vikki',
+    email: 'vikki@local.test',
     password: 'Vika2005',
     role: 'student',
     fullName: 'Виктория',
     group: '',
   },
   {
-    username: 'Prepod',
+    username: 'prepod@prepod.prepod',
+    email: 'prepod@prepod.prepod',
     password: 'Test1234',
     role: 'teacher',
     fullName: 'Андрей Борисович',
   },
   {
     username: 'Admin',
+    email: 'adm@adm.adm',
     password: 'Admin1234',
     role: 'admin',
     fullName: 'Администратор',

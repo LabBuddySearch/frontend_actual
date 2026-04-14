@@ -34,6 +34,7 @@ export function LoginPage() {
       
       if (response.user.role === 'STUDENT') navigate('/student');
       else if (response.user.role === 'TEACHER') navigate('/teacher');
+      else if (response.user.role === 'ADMIN') navigate('/admin');
       else navigate('/');
       
     } catch (e) {
