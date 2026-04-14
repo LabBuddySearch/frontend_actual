@@ -12,14 +12,14 @@ export const TEST_ACCOUNTS: ReadonlyArray<{
     username: 'Vikki',
     password: 'Vika2005',
     role: 'student',
-    fullName: 'Vikki',
+    fullName: 'Виктория',
     group: '',
   },
   {
     username: 'Prepod',
     password: 'Test1234',
     role: 'teacher',
-    fullName: 'Преподаватель',
+    fullName: 'Андрей Борисович',
   },
   {
     username: 'Admin',
@@ -29,10 +29,7 @@ export const TEST_ACCOUNTS: ReadonlyArray<{
   },
 ];
 
-export function matchTestAccount(
-  username: string,
-  password: string,
-): (typeof TEST_ACCOUNTS)[number] | undefined {
+export function matchTestAccount(username: string, password: string): (typeof TEST_ACCOUNTS)[number] | undefined {
   const u = username.trim();
   const p = password;
   return TEST_ACCOUNTS.find((a) => a.username === u && a.password === p);

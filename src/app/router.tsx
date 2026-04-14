@@ -6,7 +6,8 @@ import { StudentLayout } from '@/layouts/StudentLayout';
 import { TeacherLayout } from '@/layouts/TeacherLayout';
 import { ComingSoonPage } from '@/pages/coming-soon/ComingSoonPage';
 import { StudentDashboardPage } from '@/pages/student/StudentDashboardPage';
-import { StudentSectionPlaceholder } from '@/pages/student/StudentSectionPlaceholder';
+import { StudentTasksPage } from '@/pages/student/StudentTasksPage';
+import { StudentTaskIdePage } from '@/pages/student/StudentTaskIdePage';
 import { TeacherDashboardPage } from '@/pages/teacher/TeacherDashboardPage';
 import { TeacherSectionPlaceholder } from '@/pages/teacher/TeacherSectionPlaceholder';
 import { AdminDashboardPage } from '@/pages/admin/AdminDashboardPage';
@@ -55,8 +56,14 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <StudentDashboardPage /> },
-      { path: 'profile', element: <RoleProfilePage variant="student" /> },
-      { path: 'tasks', element: <StudentSectionPlaceholder title="Задачи" /> },
+      { path: '/student/profile', element: <RoleProfilePage variant="student" /> },
+      {
+        path: '/student/tasks',
+        children: [
+          { index: true, element: <StudentTasksPage /> },
+          { path: '/student/tasks/:taskId', element: <StudentTaskIdePage /> },
+        ],
+      },
     ],
   },
   { path: '/verify-email', element: <VerifyEmailPage /> },
