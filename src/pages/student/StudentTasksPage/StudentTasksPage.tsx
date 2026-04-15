@@ -1,27 +1,80 @@
 import { TaskListElement } from '@/components/TaskListElement/TaskListElement';
-import { CheckCircle2, Circle, LightbulbIcon, TrendingUp, TrophyIcon } from 'lucide-react';
+import { LightbulbIcon, TrendingUp, TrophyIcon } from 'lucide-react';
 import { useEffect } from 'react';
 
 // временно здесь
 export type Task = {
+  id: number;
   isDone: boolean;
   name: string;
   description: string;
   difficulty: 'Easy' | 'Medium' | 'Hard';
+  lang: 'JavaScript' | 'Java' | 'Python';
+  time: number;
+  memory: number;
 };
 
 const mockTasks: Task[] = [
   {
+    id: 1,
     isDone: true,
     name: 'Двусвязный список: Базовые операции',
     description: 'Реализуйте методы вставки и удаления узлов',
     difficulty: 'Medium',
+    lang: 'Java',
+    time: 1000,
+    memory: 256,
   },
-  { isDone: false, name: '', description: '', difficulty: 'Easy' },
-  { isDone: true, name: '', description: '', difficulty: 'Easy' },
-  { isDone: false, name: '', description: '', difficulty: 'Hard' },
-  { isDone: false, name: '', description: '', difficulty: 'Medium' },
-  { isDone: true, name: '', description: '', difficulty: 'Easy' },
+  {
+    id: 2,
+    isDone: false,
+    name: 'Бинарный поиск в массиве',
+    description: 'Классический поиск элемента за O(log n)',
+    difficulty: 'Easy',
+    lang: 'Python',
+    time: 1500,
+    memory: 256,
+  },
+  {
+    id: 3,
+    isDone: true,
+    name: 'Сортировка пузырьком',
+    description: 'Простейший алгоритм сортировки',
+    difficulty: 'Easy',
+    lang: 'Java',
+    time: 800,
+    memory: 512,
+  },
+  {
+    id: 4,
+    isDone: false,
+    name: 'Кратчайший путь: Алгоритм Дейкстры',
+    description: 'Поиск пути в графе с весами',
+    difficulty: 'Hard',
+    lang: 'JavaScript',
+    time: 800,
+    memory: 128,
+  },
+  {
+    id: 5,
+    isDone: false,
+    name: 'Обход дерева в ширину (BFS)',
+    description: 'Использование очереди для обхода структуры',
+    difficulty: 'Medium',
+    lang: 'JavaScript',
+    time: 1200,
+    memory: 256,
+  },
+  {
+    id: 6,
+    isDone: true,
+    name: 'Решето Эратосфена',
+    description: 'Поиск простых чисел до заданного N',
+    difficulty: 'Easy',
+    lang: 'Python',
+    time: 1000,
+    memory: 256,
+  },
 ];
 
 export function StudentTasksPage() {
@@ -63,116 +116,8 @@ export function StudentTasksPage() {
             </thead>
             <tbody className="divide-y divide-border-dark">
               {mockTasks.map((task) => (
-                <TaskListElement task={task} />
+                <TaskListElement task={task} isCRUDable={false} />
               ))}
-              <tr className="hover:bg-slate-800/20 transition-colors group cursor-pointer">
-                <td className="px-6 py-5">
-                  <CheckCircle2 className="text-emerald-500" />
-                </td>
-                <td className="px-6 py-5">
-                  <div className="flex flex-col">
-                    <span className="text-slate-100 font-medium group-hover:text-primary transition-colors">
-                      Двусвязный список: Базовые операции
-                    </span>
-                    <span className="text-xs text-slate-500 mt-1">Реализуйте методы вставки и удаления узлов</span>
-                  </div>
-                </td>
-                <td className="px-6 py-5 text-right">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-500 border border-amber-500/20">
-                    Medium
-                  </span>
-                </td>
-              </tr>
-              <tr className="hover:bg-slate-800/20 transition-colors group cursor-pointer">
-                <td className="px-6 py-5">
-                  <Circle className="text-slate-600" />
-                </td>
-                <td className="px-6 py-5">
-                  <div className="flex flex-col">
-                    <span className="text-slate-100 font-medium group-hover:text-primary transition-colors">
-                      Бинарный поиск в массиве
-                    </span>
-                    <span className="text-xs text-slate-500 mt-1">Классический поиск элемента за O(log n)</span>
-                  </div>
-                </td>
-                <td className="px-6 py-5 text-right">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
-                    Easy
-                  </span>
-                </td>
-              </tr>
-              <tr className="hover:bg-slate-800/20 transition-colors group cursor-pointer">
-                <td className="px-6 py-5">
-                  <CheckCircle2 className="text-emerald-500" />
-                </td>
-                <td className="px-6 py-5">
-                  <div className="flex flex-col">
-                    <span className="text-slate-100 font-medium group-hover:text-primary transition-colors">
-                      Сортировка пузырьком
-                    </span>
-                    <span className="text-xs text-slate-500 mt-1">Простейший алгоритм сортировки</span>
-                  </div>
-                </td>
-                <td className="px-6 py-5 text-right">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
-                    Easy
-                  </span>
-                </td>
-              </tr>
-              <tr className="hover:bg-slate-800/20 transition-colors group cursor-pointer">
-                <td className="px-6 py-5">
-                  <Circle className="text-slate-600" />
-                </td>
-                <td className="px-6 py-5">
-                  <div className="flex flex-col">
-                    <span className="text-slate-100 font-medium group-hover:text-primary transition-colors">
-                      Кратчайший путь: Алгоритм Дейкстры
-                    </span>
-                    <span className="text-xs text-slate-500 mt-1">Поиск пути в графе с весами</span>
-                  </div>
-                </td>
-                <td className="px-6 py-5 text-right">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-500/10 text-rose-500 border border-rose-500/20">
-                    Hard
-                  </span>
-                </td>
-              </tr>
-              <tr className="hover:bg-slate-800/20 transition-colors group cursor-pointer">
-                <td className="px-6 py-5">
-                  <Circle className="text-slate-600" />
-                </td>
-                <td className="px-6 py-5">
-                  <div className="flex flex-col">
-                    <span className="text-slate-100 font-medium group-hover:text-primary transition-colors">
-                      Обход дерева в ширину (BFS)
-                    </span>
-                    <span className="text-xs text-slate-500 mt-1">Использование очереди для обхода структуры</span>
-                  </div>
-                </td>
-                <td className="px-6 py-5 text-right">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-500 border border-amber-500/20">
-                    Medium
-                  </span>
-                </td>
-              </tr>
-              <tr className="hover:bg-slate-800/20 transition-colors group cursor-pointer">
-                <td className="px-6 py-5">
-                  <CheckCircle2 className="text-emerald-500" />
-                </td>
-                <td className="px-6 py-5">
-                  <div className="flex flex-col">
-                    <span className="text-slate-100 font-medium group-hover:text-primary transition-colors">
-                      Решето Эратосфена
-                    </span>
-                    <span className="text-xs text-slate-500 mt-1">Поиск простых чисел до заданного N</span>
-                  </div>
-                </td>
-                <td className="px-6 py-5 text-right">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
-                    Easy
-                  </span>
-                </td>
-              </tr>
             </tbody>
           </table>
         </div>
