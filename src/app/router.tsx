@@ -10,18 +10,18 @@ import { StudentDashboardPage } from '@/pages/student/StudentDashboardPage';
 import { StudentTasksPage } from '@/pages/student/StudentTasksPage';
 import { StudentTaskIdePage } from '@/pages/student/StudentTaskIdePage';
 import { TeacherDashboardPage } from '@/pages/teacher/TeacherDashboardPage';
-import { TeacherSectionPlaceholder } from '@/pages/teacher/TeacherSectionPlaceholder';
 import { AdminDashboardPage } from '@/pages/admin/AdminDashboardPage';
 import { AdminSectionPlaceholder } from '@/pages/admin/AdminSectionPlaceholder';
 import { AdminUserManagementPage } from '@/pages/admin/AdminUserManagementPage';
 import { RoleProfilePage } from '@/pages/profile/RoleProfilePage';
 import { VerifyEmailPage } from '@/pages/verify-email/VerifyEmailPage';
 import { ForgotPasswordPage } from '@/pages/forgot-password/ForgotPasswordPage';
+import { TeacherTasksPage } from '@/pages/teacher/TeacherTasksPage';
 
 export const router = createBrowserRouter([
   { path: '/', element: <Navigate to="/login" replace /> },
-{ path: '/login', element: <LoginPage /> },
-{ path: '/register', element: <RegisterPage /> },
+  { path: '/login', element: <LoginPage /> },
+  { path: '/register', element: <RegisterPage /> },
   {
     path: '/admin',
     element: (
@@ -47,7 +47,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <TeacherDashboardPage /> },
       { path: 'profile', element: <RoleProfilePage variant="teacher" /> },
-      { path: 'tasks', element: <TeacherSectionPlaceholder title="Задачи" /> },
+      { path: 'tasks', element: <TeacherTasksPage /> },
     ],
   },
   {

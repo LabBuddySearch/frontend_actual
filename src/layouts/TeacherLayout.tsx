@@ -1,12 +1,4 @@
-import {
-  ClipboardList,
-  LayoutDashboard,
-  LogOut,
-  Menu,
-  Terminal,
-  User,
-  X,
-} from 'lucide-react';
+import { ClipboardList, LayoutDashboard, LogOut, Menu, Terminal, User, X } from 'lucide-react';
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 
@@ -15,9 +7,7 @@ import { useAuthStore } from '@/store/authStore';
 
 function navLinkClass({ isActive }: { isActive: boolean }) {
   return `flex items-center gap-3 rounded-lg px-4 py-3 text-sm transition-colors ${
-    isActive
-      ? 'bg-primary/10 font-medium text-primary'
-      : 'text-slate-400 hover:bg-white/5 hover:text-slate-100'
+    isActive ? 'bg-primary/10 font-medium text-primary' : 'text-slate-400 hover:bg-white/5 hover:text-slate-100'
   }`;
 }
 
@@ -124,7 +114,7 @@ export function TeacherLayout() {
             </div>
             <div className="flex items-center gap-4">
               <div className="hidden text-right sm:block">
-                <p className="text-sm font-semibold">Привет, {fullName || 'коллега'}!</p>
+                <p className="text-sm font-semibold">Здравствуйте, {fullName || 'коллега'}!</p>
                 <p className="text-xs text-slate-400">Преподаватель</p>
               </div>
               <NavLink
@@ -149,11 +139,7 @@ export function TeacherLayout() {
         </div>
       </div>
 
-      <LogoutConfirmModal
-        open={logoutOpen}
-        onConfirm={handleLogout}
-        onOpenChange={setLogoutOpen}
-      />
+      <LogoutConfirmModal open={logoutOpen} onConfirm={handleLogout} onOpenChange={setLogoutOpen} />
     </div>
   );
 }
