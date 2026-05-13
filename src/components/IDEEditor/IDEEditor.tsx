@@ -5,7 +5,7 @@ import { javascript } from '@codemirror/lang-javascript';
 import { java } from '@codemirror/lang-java';
 import { python } from '@codemirror/lang-python';
 import { Code, RefreshCwIcon, SendHorizonalIcon } from 'lucide-react';
-import type { Task } from '@/pages/student/StudentTasksPage/StudentTasksPage';
+import type { Task } from '@/types/task';
 
 type Props = Pick<Task, 'lang'>;
 

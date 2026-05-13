@@ -1,7 +1,7 @@
 import { BanIcon, CheckCircle2, HistoryIcon } from 'lucide-react';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import type { Task } from '../StudentTasksPage/StudentTasksPage';
+import type { Task } from '@/types/task';
 import { IDEEditor } from '@/components/IDEEditor';
 
 interface LocationState {

@@ -1,18 +1,9 @@
 import { TaskListElement } from '@/components/TaskListElement/TaskListElement';
+import type { Task } from '@/types/task';
 import { LightbulbIcon, TrendingUp, TrophyIcon } from 'lucide-react';
 import { useEffect } from 'react';
 
-// временно здесь
-export type Task = {
-  id: number;
-  isDone: boolean;
-  name: string;
-  description: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-  lang: 'JavaScript' | 'Java' | 'Python';
-  time: number;
-  memory: number;
-};
+export type { Task } from '@/types/task';
 
 const mockTasks: Task[] = [
   {
@@ -24,6 +15,7 @@ const mockTasks: Task[] = [
     lang: 'Java',
     time: 1000,
     memory: 256,
+    section: 'Алгоритмы',
   },
   {
     id: 2,
@@ -34,6 +26,7 @@ const mockTasks: Task[] = [
     lang: 'Python',
     time: 1500,
     memory: 256,
+    section: 'Алгоритмы',
   },
   {
     id: 3,
@@ -44,6 +37,7 @@ const mockTasks: Task[] = [
     lang: 'Java',
     time: 800,
     memory: 512,
+    section: 'Алгоритмы',
   },
   {
     id: 4,
@@ -54,6 +48,7 @@ const mockTasks: Task[] = [
     lang: 'JavaScript',
     time: 800,
     memory: 128,
+    section: 'Алгоритмы',
   },
   {
     id: 5,
@@ -64,6 +59,7 @@ const mockTasks: Task[] = [
     lang: 'JavaScript',
     time: 1200,
     memory: 256,
+    section: 'Алгоритмы',
   },
   {
     id: 6,
@@ -74,6 +70,7 @@ const mockTasks: Task[] = [
     lang: 'Python',
     time: 1000,
     memory: 256,
+    section: 'Алгоритмы',
   },
 ];
 
@@ -116,7 +113,7 @@ export function StudentTasksPage() {
             </thead>
             <tbody className="divide-y divide-border-dark">
               {mockTasks.map((task) => (
-                <TaskListElement task={task} isCRUDable={false} />
+                <TaskListElement key={task.id} task={task} isCRUDable={false} />
               ))}
             </tbody>
           </table>

@@ -11,7 +11,7 @@ import { StudentTasksPage } from '@/pages/student/StudentTasksPage';
 import { StudentTaskIdePage } from '@/pages/student/StudentTaskIdePage';
 import { TeacherDashboardPage } from '@/pages/teacher/TeacherDashboardPage';
 import { AdminDashboardPage } from '@/pages/admin/AdminDashboardPage';
-import { AdminSectionPlaceholder } from '@/pages/admin/AdminSectionPlaceholder';
+import { AdminTasksPage } from '@/pages/admin/AdminTasksPage';
 import { AdminUserManagementPage } from '@/pages/admin/AdminUserManagementPage';
 import { RoleProfilePage } from '@/pages/profile/RoleProfilePage';
 import { VerifyEmailPage } from '@/pages/verify-email/VerifyEmailPage';
@@ -34,7 +34,7 @@ export const router = createBrowserRouter([
       { path: 'profile', element: <RoleProfilePage variant="admin" /> },
       { path: 'students', element: <AdminUserManagementPage variant="students" /> },
       { path: 'teachers', element: <AdminUserManagementPage variant="teachers" /> },
-      { path: 'tasks', element: <AdminSectionPlaceholder title="Задачи" /> },
+      { path: 'tasks', element: <AdminTasksPage /> },
     ],
   },
   {

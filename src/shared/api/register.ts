@@ -37,8 +37,12 @@ export async function postTeacherRegister(body: TeacherRegisterPayload) {
 }
 
 export async function verifyEmailToken(token: string) {
-  const { data } = await client.get<{ ok: boolean }>('/api/auth/verify-email', {
-    params: { token },
-  });
+  const { data } = await client.get<{ ok: boolean; message?: string; error?: string }>(
+    '/api/auth/verify-email',
+    { params: { token } },
+  );
+  if (!data.ok) {
+    throw new Error(data.message ?? data.error ?? 'Не удалось подтвердить email.');
+  }
   return data;
 }
