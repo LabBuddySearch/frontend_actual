@@ -56,3 +56,385 @@
     min-height: 100vh;
   }
 }
+
+/* Печать сводного отчёта: без fixed-подвала (иначе текст и лишняя страница в Chrome) */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0 10mm 10mm 10mm;
+  }
+
+  html {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    height: auto !important;
+    min-height: 0 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  #root {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  /* md:h-dvh при печати даёт высоту окна → пустое место над отчётом */
+  .md\:h-dvh {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  .admin-layout-print-main {
+    flex: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  .admin-layout-print-outlet {
+    flex: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* Скрытый layout всё ещё занимает высоту экрана (min-h-dvh) → пустая 1-я страница */
+  .min-h-dvh,
+  .h-dvh,
+  .min-h-screen,
+  .h-screen {
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  /* Модалка отчёта: убрать полноэкранные слои из потока печати */
+  .admin-report-print-modal-backdrop {
+    display: none !important;
+  }
+
+  .admin-report-print-modal-chrome {
+    display: none !important;
+  }
+
+  .admin-report-print-modal {
+    position: static !important;
+    inset: auto !important;
+    display: block !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  .admin-report-print-modal-panel {
+    position: static !important;
+    display: block !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+
+  .admin-report-print-modal-body {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .admin-report-print-wrap {
+    max-height: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    display: block !important;
+    gap: 0 !important;
+  }
+
+  /* Запасной сброс для предков отчёта */
+  div:has(#admin-report-root) {
+    position: static !important;
+    inset: auto !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+
+  .admin-layout-print-root {
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .admin-layout-print-root > aside.h-dvh,
+  .admin-layout-print-root aside {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  #admin-report-root,
+  #admin-report-root * {
+    visibility: visible;
+  }
+
+  #admin-report-root.admin-report-sheet {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
+    padding-top: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    outline: none !important;
+    --tw-ring-width: 0 !important;
+    background: #fff !important;
+    color: #1e293b !important;
+    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.5;
+    display: block !important;
+  }
+
+  #admin-report-root .admin-report-body {
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    padding-top: 0 !important;
+    margin: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  #admin-report-root .admin-report-title {
+    font-size: 16pt !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+    color: #0f172a !important;
+    margin: 0 0 1mm 0 !important;
+    padding: 0 0 1.5mm 0 !important;
+    border-bottom: 0.5mm solid #2563eb !important;
+  }
+
+  #admin-report-root .admin-report-meta {
+    font-size: 9pt !important;
+    color: #475569 !important;
+    margin: 0 0 2.5mm 0 !important;
+  }
+
+  #admin-report-root .admin-report-h2 {
+    font-size: 11pt !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    margin: 2.5mm 0 2mm 0 !important;
+    padding: 0 0 1.5mm 0 !important;
+    border-bottom: 0.2mm solid #cbd5e1 !important;
+    page-break-after: avoid;
+  }
+
+  #admin-report-root .admin-report-h2:first-of-type {
+    margin-top: 0 !important;
+  }
+
+  #admin-report-root .admin-report-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    font-size: 10pt !important;
+    margin: 0 0 4mm 0 !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    page-break-inside: avoid;
+  }
+
+  #admin-report-root .admin-report-th,
+  #admin-report-root .admin-report-td {
+    border: 0.25mm solid #94a3b8 !important;
+    padding: 2mm 2.5mm !important;
+    text-align: left !important;
+    vertical-align: top !important;
+    color: #0f172a !important;
+    background: #fff !important;
+  }
+
+  #admin-report-root thead tr {
+    background: #f1f5f9 !important;
+  }
+
+  #admin-report-root .admin-report-th {
+    font-weight: 600 !important;
+    color: #1e293b !important;
+    background: #f1f5f9 !important;
+  }
+
+  #admin-report-root .admin-report-th-num,
+  #admin-report-root .admin-report-td-num {
+    text-align: right !important;
+    width: 20% !important;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600 !important;
+  }
+
+  #admin-report-root tbody tr:nth-child(even) .admin-report-td {
+    background: #f8fafc !important;
+  }
+
+  #admin-report-root tbody tr:nth-child(odd) .admin-report-td {
+    background: #fff !important;
+  }
+
+  #admin-report-root .admin-report-list,
+  #admin-report-root .admin-report-ol,
+  #admin-report-root .admin-report-log {
+    font-size: 10pt !important;
+    color: #334155 !important;
+    margin: 0 0 4mm 0 !important;
+  }
+
+  #admin-report-root .admin-report-list-item,
+  #admin-report-root .admin-report-ol li {
+    color: #334155 !important;
+  }
+
+  #admin-report-root .admin-report-line,
+  #admin-report-root .admin-report-note {
+    color: #475569 !important;
+  }
+
+  #admin-report-root .admin-report-label {
+    color: #64748b !important;
+    font-size: 8.5pt !important;
+  }
+
+  #admin-report-root .admin-report-note {
+    font-size: 8.5pt !important;
+    line-height: 1.45 !important;
+    margin-bottom: 0 !important;
+  }
+
+  #admin-report-root .admin-report-log-row {
+    border-color: #e2e8f0 !important;
+    padding-bottom: 2mm !important;
+  }
+
+  #admin-report-root .admin-report-log-time {
+    color: #64748b !important;
+    font-size: 8.5pt !important;
+  }
+
+  #admin-report-root .admin-report-body .text-slate-200,
+  #admin-report-root .admin-report-body span.font-semibold.text-slate-100 {
+    color: #0f172a !important;
+  }
+
+  #admin-report-root .admin-report-body .text-slate-500 {
+    color: #64748b !important;
+  }
+
+  /* Подвал в потоке — один раз в конце, без наложения на текст */
+  #admin-report-root .admin-report-footer {
+    position: static !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 4mm !important;
+    margin: 6mm 0 0 0 !important;
+    padding: 3mm 0 0 0 !important;
+    border-top: 0.35mm solid #cbd5e1 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+    page-break-before: avoid;
+  }
+
+  #admin-report-root .admin-report-footer-logo-wrap {
+    flex-shrink: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    padding: 1.75mm !important;
+    margin: 0 2mm 0 0 !important;
+    border: 0.2mm solid #e2e8f0 !important;
+    border-radius: 1mm !important;
+    background: #f8fafc !important;
+    min-width: calc(9mm + 3.5mm) !important;
+    min-height: calc(9mm + 3.5mm) !important;
+  }
+
+  #admin-report-root .admin-report-footer > div:last-child {
+    padding-left: 1mm !important;
+    min-width: 0 !important;
+    max-width: 65% !important;
+  }
+
+  #admin-report-root .admin-report-footer-logo {
+    width: 9mm !important;
+    height: 9mm !important;
+    object-fit: contain !important;
+    display: block !important;
+  }
+
+  #admin-report-root .admin-report-footer-name {
+    font-size: 11pt !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+  }
+
+  #admin-report-root .admin-report-footer-tag {
+    font-size: 8pt !important;
+    color: #64748b !important;
+  }
+
+  .admin-report-actions {
+    display: none !important;
+  }
+
+  /* Отчёт временно перенесён в body — скрываем всё приложение, убираем «пустую» страницу */
+  html.printing-admin-report body {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  html.printing-admin-report body > *:not(#admin-report-root) {
+    display: none !important;
+  }
+
+  html.printing-admin-report body * {
+    visibility: visible !important;
+  }
+
+  html.printing-admin-report #admin-report-root {
+    position: static !important;
+    margin-top: 14mm !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}

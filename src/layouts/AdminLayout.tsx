@@ -67,7 +67,7 @@ export function AdminLayout() {
   );
 
   return (
-    <div className="relative flex min-h-dvh w-full overflow-hidden bg-background-light font-display text-slate-900 antialiased dark:bg-background-dark dark:text-slate-100">
+    <div className="admin-layout-print-root relative flex min-h-dvh w-full overflow-hidden bg-background-light font-display text-slate-900 antialiased dark:bg-background-dark dark:text-slate-100">
       {mobileNavOpen && (
         <button
           aria-label="Закрыть меню"
@@ -117,7 +117,7 @@ export function AdminLayout() {
         </button>
       </aside>
 
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col md:h-dvh">
+      <div className="admin-layout-print-main flex min-h-0 min-w-0 flex-1 flex-col md:h-dvh">
         <header className="flex shrink-0 items-center justify-between border-b border-border-color bg-surface px-6 py-4 lg:px-10">
           <div className="flex min-w-0 items-center gap-4 md:gap-8">
             <button
@@ -186,7 +186,7 @@ export function AdminLayout() {
           </div>
         </header>
 
-        <div className="min-h-0 flex-1 overflow-y-auto">
+        <div className="admin-layout-print-outlet min-h-0 flex-1 overflow-y-auto">
           <Outlet />
         </div>
       </div>

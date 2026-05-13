@@ -30,9 +30,18 @@ export function VerifyEmailPage() {
       })
       .catch((e) => {
         if (cancelled) return;
+        if (e instanceof Error && !axios.isAxiosError(e)) {
+          setState('err');
+          setMessage(e.message);
+          return;
+        }
         const msg =
           axios.isAxiosError(e) && e.response?.data && typeof e.response.data === 'object'
-            ? String((e.response.data as { error?: string }).error ?? e.message)
+            ? String(
+                (e.response.data as { error?: string; message?: string }).error ??
+                  (e.response.data as { message?: string }).message ??
+                  e.message,
+              )
             : 'Не удалось подтвердить email. Запустите сервер API или откройте ссылку снова.';
         setState('err');
         setMessage(msg);

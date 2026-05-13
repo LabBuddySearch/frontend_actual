@@ -2,8 +2,9 @@ import { ChevronLeft, ChevronRight, Search, UserPlus } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 
+import { useAdminPlatformStore } from '@/store/adminPlatformStore';
+
 import { AdminCustomSelect } from './AdminCustomSelect';
-import { ADMIN_USERS_MOCK } from './adminUsersMock';
 import type { AdminUserRow } from './adminUsersTypes';
 
 const PAGE_SIZE_OPTIONS = [4, 8, 12, 20, 50] as const;
@@ -29,7 +30,9 @@ type Props = {
 
 export function AdminUserManagementPage({ variant }: Props) {
   const location = useLocation();
-  const [rows, setRows] = useState<AdminUserRow[]>(() => [...ADMIN_USERS_MOCK]);
+  const rows = useAdminPlatformStore((s) => s.users);
+  const toggleUserBlock = useAdminPlatformStore((s) => s.toggleUserBlock);
+  const removeUser = useAdminPlatformStore((s) => s.removeUser);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [pageSize, setPageSize] = useState<(typeof PAGE_SIZE_OPTIONS)[number]>(4);
@@ -70,9 +73,12 @@ export function AdminUserManagementPage({ variant }: Props) {
   const pageSlice = filtered.slice(safePage * pageSize, safePage * pageSize + pageSize);
 
   const toggleBlock = (id: string) => {
-    setRows((prev) =>
-      prev.map((u) => (u.id === id ? { ...u, blocked: !u.blocked } : u)),
-    );
+    toggleUserBlock(id);
+  };
+
+  const handleDeleteUser = (u: AdminUserRow) => {
+    if (!window.confirm(`Удалить пользователя «${u.fullName}» из системы?`)) return;
+    removeUser(u.id);
   };
 
   const tabClass = (to: string) =>
@@ -219,23 +225,32 @@ export function AdminUserManagementPage({ variant }: Props) {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">
-                      {u.blocked ? (
+                      <div className="flex flex-col items-center gap-2">
+                        {u.blocked ? (
+                          <button
+                            className="inline-flex h-12 w-52 shrink-0 items-center justify-center rounded-lg border border-primary px-4 text-sm font-bold text-primary transition-colors hover:bg-primary hover:text-background-dark"
+                            type="button"
+                            onClick={() => toggleBlock(u.id)}
+                          >
+                            Разблокировать
+                          </button>
+                        ) : (
+                          <button
+                            className="inline-flex h-12 w-52 shrink-0 items-center justify-center rounded-lg border border-status-red px-4 text-sm font-bold text-status-red transition-colors hover:bg-status-red hover:text-white"
+                            type="button"
+                            onClick={() => toggleBlock(u.id)}
+                          >
+                            Заблокировать
+                          </button>
+                        )}
                         <button
-                          className="inline-flex h-12 w-52 shrink-0 items-center justify-center rounded-lg border border-primary px-4 text-sm font-bold text-primary transition-colors hover:bg-primary hover:text-background-dark"
+                          className="text-xs font-medium text-slate-500 underline-offset-2 hover:text-status-red hover:underline"
                           type="button"
-                          onClick={() => toggleBlock(u.id)}
+                          onClick={() => handleDeleteUser(u)}
                         >
-                          Разблокировать
+                          Удалить из системы
                         </button>
-                      ) : (
-                        <button
-                          className="inline-flex h-12 w-52 shrink-0 items-center justify-center rounded-lg border border-status-red px-4 text-sm font-bold text-status-red transition-colors hover:bg-status-red hover:text-white"
-                          type="button"
-                          onClick={() => toggleBlock(u.id)}
-                        >
-                          Заблокировать
-                        </button>
-                      )}
+                      </div>
                     </td>
                   </tr>
                 ))}
