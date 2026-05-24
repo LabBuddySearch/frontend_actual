@@ -40,7 +40,9 @@ export async function getStudentSubmissionHistory() {
 
 export function formatSubmissionStatus(status: string): { label: string; ok: boolean } {
   if (status === 'ACCEPTED') return { label: 'OK', ok: true };
-  if (status === 'WRONG') return { label: 'ERROR', ok: false };
+  if (status === 'WRONG' || status === 'WRONG_ANSWER' || status === 'COMPILATION_ERROR') {
+    return { label: 'ERROR', ok: false };
+  }
   if (status === 'PENDING') return { label: 'PENDING', ok: false };
   return { label: status, ok: false };
 }
