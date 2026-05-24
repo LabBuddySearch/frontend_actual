@@ -8,6 +8,8 @@ export type PlatformTasksTableProps = {
   footerLeft?: ReactNode;
   emptyMessage?: string;
   onDeleteTask?: (task: Task) => void;
+  onEditTask?: (task: Task) => void;
+  deletingId?: number | null;
 };
 
 export function PlatformTasksTable({
@@ -15,6 +17,8 @@ export function PlatformTasksTable({
   footerLeft,
   emptyMessage = 'Задач пока нет.',
   onDeleteTask,
+  onEditTask,
+  deletingId = null,
 }: PlatformTasksTableProps) {
   const left =
     footerLeft !== undefined ? footerLeft : <span className="text-sm text-slate-400">Всего задач: {tasks.length}</span>;
@@ -44,7 +48,14 @@ export function PlatformTasksTable({
               </tr>
             )}
             {tasks.map((task) => (
-              <TaskListElement key={task.id} isCRUDable onDeleteTask={onDeleteTask} task={task} />
+              <TaskListElement
+                key={task.id}
+                isCRUDable
+                isDeleting={deletingId === task.id}
+                onDeleteTask={onDeleteTask}
+                onEditTask={onEditTask}
+                task={task}
+              />
             ))}
           </tbody>
         </table>

@@ -1,4 +1,4 @@
-import { ClipboardList, LayoutDashboard, LogOut, Menu, Terminal, User, X } from 'lucide-react';
+import { ClipboardList, LayoutDashboard, LogOut, Menu, Terminal, User, Users, X } from 'lucide-react';
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 
@@ -39,6 +39,10 @@ export function TeacherLayout() {
       <NavLink className={navLinkClass} to="/teacher/tasks" onClick={closeMobile}>
         <ClipboardList aria-hidden className="size-[22px]" strokeWidth={1.75} />
         Задачи
+      </NavLink>
+      <NavLink className={navLinkClass} to="/teacher/groups" onClick={closeMobile}>
+        <Users aria-hidden className="size-[22px]" strokeWidth={1.75} />
+        Группы
       </NavLink>
     </>
   );

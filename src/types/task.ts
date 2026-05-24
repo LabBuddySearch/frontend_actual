@@ -2,10 +2,13 @@ export type TaskLanguage = 'JavaScript' | 'Java' | 'Python';
 
 export type TaskDifficulty = 'Easy' | 'Medium' | 'Hard';
 
+export type StudentTaskStatus = 'SOLVED' | 'NOT_STARTED' | 'IN_PROGRESS' | 'FAILED';
+
 /** Задача в каталоге (студент / преподаватель / админ). */
 export type Task = {
   id: number;
   isDone: boolean;
+  studentStatus?: StudentTaskStatus;
   name: string;
   description: string;
   difficulty: TaskDifficulty;

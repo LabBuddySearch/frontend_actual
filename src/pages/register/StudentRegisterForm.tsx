@@ -2,7 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AtSign, KeyRound, Lock, Mail, User, Users } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
 import { registerUser } from '@/shared/api/auth';
-import { useState } from 'react';
+import { formatGroupOptionLabel, getAvailableGroups, getGroupsApiErrorMessage } from '@/shared/api/groups';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 
@@ -18,6 +19,9 @@ type StudentRegisterFormProps = {
 
 export function StudentRegisterForm({ onSuccess }: StudentRegisterFormProps) {
   const [apiError, setApiError] = useState<string | null>(null);
+  const [groupsLoading, setGroupsLoading] = useState(true);
+  const [groupsLoadError, setGroupsLoadError] = useState<string | null>(null);
+  const [groupOptions, setGroupOptions] = useState<{ code: string; label: string }[]>([]);
   const loginAction = useAuthStore((state) => state.login);
   const {
     register,
@@ -38,6 +42,24 @@ export function StudentRegisterForm({ onSuccess }: StudentRegisterFormProps) {
     },
   });
 
+  useEffect(() => {
+    void getAvailableGroups()
+      .then((res) => {
+        setGroupOptions(
+          res.groups.map((g) => ({
+            code: g.code,
+            label: formatGroupOptionLabel(g),
+          })),
+        );
+        setGroupsLoadError(null);
+      })
+      .catch((err) => {
+        setGroupsLoadError(getGroupsApiErrorMessage(err, 'Не удалось загрузить список групп.'));
+        setGroupOptions([]);
+      })
+      .finally(() => setGroupsLoading(false));
+  }, []);
+
   const onSubmit = async (data: StudentRegisterFormValues) => {
     setApiError(null);
     try {
@@ -48,7 +70,7 @@ export function StudentRegisterForm({ onSuccess }: StudentRegisterFormProps) {
         password: data.password,
         student_group: data.groupCode,
       };
-      
+
       const response = await registerUser(payload);
 
       loginAction(response.accessToken, {
@@ -56,7 +78,7 @@ export function StudentRegisterForm({ onSuccess }: StudentRegisterFormProps) {
         username: data.username.trim(),
         studentGroup: data.groupCode.trim() || undefined,
       });
-      
+
       reset();
       onSuccess?.();
     } catch (e) {
@@ -78,16 +100,21 @@ export function StudentRegisterForm({ onSuccess }: StudentRegisterFormProps) {
         </div>
       )}
 
+      {groupsLoadError && (
+        <div
+          className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-4 text-sm text-amber-800 dark:text-amber-200"
+          role="alert"
+        >
+          {groupsLoadError}
+        </div>
+      )}
+
       <div>
         <label className={REG_LABEL} htmlFor="reg-full-name">
           Имя
         </label>
         <div className="relative">
-          <User
-            aria-hidden
-            className={REG_ICON}
-            strokeWidth={1.75}
-          />
+          <User aria-hidden className={REG_ICON} strokeWidth={1.75} />
           <input
             id="reg-full-name"
             autoComplete="name"
@@ -195,25 +222,34 @@ export function StudentRegisterForm({ onSuccess }: StudentRegisterFormProps) {
 
       <div>
         <label className={REG_LABEL} htmlFor="reg-group-code">
-          Код группы
+          Группа
         </label>
         <div className="relative">
           <Users aria-hidden className={REG_ICON} strokeWidth={1.75} />
-          <input
+          <select
             id="reg-group-code"
-            className={REG_INPUT}
-            placeholder="Например: CS-2024"
-            type="text"
+            className={`${REG_INPUT} cursor-pointer appearance-none`}
+            disabled={groupsLoading}
             {...register('groupCode')}
-          />
+          >
+            <option value="">{groupsLoading ? 'Загрузка групп...' : 'Выберите группу'}</option>
+            {groupOptions.map((g) => (
+              <option key={g.code} value={g.code}>
+                {g.label}
+              </option>
+            ))}
+          </select>
         </div>
-        <p className={REG_HINT}>
-          Необязательно, если вы регистрируетесь самостоятельно
-        </p>
+        <p className={REG_HINT}>Выберите учебную группу и преподавателя из списка</p>
+        {errors.groupCode && (
+          <p className={REG_ERROR} role="alert">
+            {errors.groupCode.message}
+          </p>
+        )}
       </div>
 
       <div className="pt-2">
-        <button className={REG_SUBMIT} disabled={isSubmitting} type="submit">
+        <button className={REG_SUBMIT} disabled={isSubmitting || groupsLoading} type="submit">
           Зарегистрироваться
         </button>
       </div>

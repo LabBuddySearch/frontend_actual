@@ -1,11 +1,8 @@
 import { useState } from 'react';
+import { useStudentContext } from '@/shared/hooks/useStudentContext';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  BookOpen,
-  CodeXml,
-  Filter,
-  History,
   Mail,
   Sparkles,
   StickyNote,
@@ -24,16 +21,10 @@ import {
   type TeacherProfileEditValues,
 } from '@/pages/profile/profile-edit.schema';
 
+import { ProfileAvatar } from '@/components/profile/ProfileAvatar';
 import styles from './Profile.module.css';
 
 export type ProfileVariant = 'student' | 'teacher' | 'admin';
-
-const historyData = [
-  { id: 1, name: 'Сортировка пузырьком', status: 'OK', lang: 'Python', date: '12.10.2023 14:20', langColor: '#f1e05a' },
-  { id: 2, name: 'Бинарный поиск', status: 'ERROR', lang: 'Java', date: '11.10.2023 10:15', langColor: '#b07219' },
-  { id: 3, name: 'Связный список', status: 'OK', lang: 'Python', date: '10.10.2023 18:45', langColor: '#f1e05a' },
-  { id: 4, name: 'Алгоритм Дейкстры', status: 'ERROR', lang: 'C++', date: '08.10.2023 12:05', langColor: '#f34b7d' },
-];
 
 type ProfileProps = {
   variant?: ProfileVariant;
@@ -48,6 +39,14 @@ function StudentProfileEditor({
 }) {
   const user = useAuthStore((s) => s.user)!;
   const updateUser = useAuthStore((s) => s.updateUser);
+  const studentContext = useStudentContext(true);
+
+  const groupDisplay =
+    studentContext?.groupName?.trim() || user.studentGroup?.trim() || 'Не указано';
+  const teacherDisplay =
+    studentContext?.teacherName?.trim() ||
+    studentContext?.teacherEmail?.trim() ||
+    'Не назначен';
 
   const {
     register,
@@ -59,7 +58,7 @@ function StudentProfileEditor({
       fullName: user.fullName,
       email: user.email,
       username: displayLoginFromUser(user),
-      groupCode: user.studentGroup ?? '',
+      groupCode: groupDisplay,
       studentHobbies: user.studentHobbies ?? '',
     },
   });
@@ -69,7 +68,6 @@ function StudentProfileEditor({
       fullName: data.fullName,
       email: data.email,
       username: data.username.trim(),
-      studentGroup: data.groupCode.trim() || undefined,
       studentHobbies: data.studentHobbies.trim() || undefined,
     });
     onSaved();
@@ -120,9 +118,29 @@ function StudentProfileEditor({
         </div>
         <div className={styles.field}>
           <label className={styles.fieldLabel} htmlFor="pf-st-group">
-            Код группы
+            Группа
           </label>
-          <input id="pf-st-group" className={styles.input} type="text" {...register('groupCode')} />
+          <input
+            id="pf-st-group"
+            className={`${styles.input} opacity-60 cursor-not-allowed`}
+            disabled
+            readOnly
+            type="text"
+            value={groupDisplay}
+          />
+        </div>
+        <div className={styles.field}>
+          <label className={styles.fieldLabel} htmlFor="pf-st-teacher">
+            Преподаватель
+          </label>
+          <input
+            id="pf-st-teacher"
+            className={`${styles.input} opacity-60 cursor-not-allowed`}
+            disabled
+            readOnly
+            type="text"
+            value={teacherDisplay}
+          />
         </div>
         <div className={`${styles.field} ${styles.fullWidth}`}>
           <label className={styles.fieldLabel} htmlFor="pf-st-hobby">
@@ -163,7 +181,6 @@ function TeacherProfileEditor({
       fullName: user.fullName,
       email: user.email,
       username: displayLoginFromUser(user),
-      teacherSubject: user.teacherSubject ?? '',
     },
   });
 
@@ -172,7 +189,6 @@ function TeacherProfileEditor({
       fullName: data.fullName,
       email: data.email,
       username: data.username.trim(),
-      teacherSubject: data.teacherSubject.trim() || undefined,
     });
     onSaved();
   };
@@ -219,12 +235,6 @@ function TeacherProfileEditor({
               {errors.username.message}
             </p>
           )}
-        </div>
-        <div className={`${styles.field} ${styles.fullWidth}`}>
-          <label className={styles.fieldLabel} htmlFor="pf-th-subj">
-            Преподаваемый предмет
-          </label>
-          <input id="pf-th-subj" className={styles.input} type="text" placeholder="Например: информатика" {...register('teacherSubject')} />
         </div>
       </div>
       <div className={styles.formActions}>
@@ -338,12 +348,12 @@ function AdminProfileEditor({
 export const Profile = ({ variant = 'student' }: ProfileProps) => {
   const user = useAuthStore((s) => s.user);
   const [isEditing, setIsEditing] = useState(false);
-  const showSolutionHistory = variant === 'student';
+  const studentContext = useStudentContext(variant === 'student');
 
   const roleLabel = variant === 'student' ? 'Группа' : 'Роль';
   const roleValue =
     variant === 'student'
-      ? user?.studentGroup?.trim() || 'Не указано'
+      ? studentContext?.groupName?.trim() || user?.studentGroup?.trim() || 'Не указано'
       : variant === 'teacher'
         ? 'Преподаватель'
         : 'Администратор';
@@ -362,8 +372,14 @@ export const Profile = ({ variant = 'student' }: ProfileProps) => {
     <div className={styles.container}>
       <div className={styles.profileCard}>
         <div className={styles.profileCardRow}>
-          <div className={styles.avatarColumn} aria-hidden>
-            <div className={styles.avatarLg} />
+          <div className={styles.avatarColumn}>
+            {variant === 'student' || variant === 'teacher' ? (
+              <ProfileAvatar fullName={user.fullName} />
+            ) : (
+              <div className={styles.avatarBlock} aria-hidden>
+                <div className={styles.avatarLg} />
+              </div>
+            )}
           </div>
 
           <div className={styles.profileMain}>
@@ -401,6 +417,17 @@ export const Profile = ({ variant = 'student' }: ProfileProps) => {
               </div>
 
               {variant === 'student' && (
+                <div className={styles.infoItem}>
+                  <span className={styles.infoLabel}>Преподаватель</span>
+                  <span className={styles.infoValue}>
+                    {studentContext?.teacherName?.trim() ||
+                      studentContext?.teacherEmail?.trim() ||
+                      'Не назначен'}
+                  </span>
+                </div>
+              )}
+
+              {variant === 'student' && (
                 <div className={styles.customBlock}>
                   <p className={styles.customTitle}>
                     <Sparkles size={14} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 6 }} />
@@ -408,18 +435,6 @@ export const Profile = ({ variant = 'student' }: ProfileProps) => {
                   </p>
                   <span className={styles.infoValue} style={{ fontSize: 16, fontWeight: 500 }}>
                     {user.studentHobbies?.trim() || 'Не указано'}
-                  </span>
-                </div>
-              )}
-
-              {variant === 'teacher' && (
-                <div className={styles.customBlock}>
-                  <p className={styles.customTitle}>
-                    <BookOpen size={14} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 6 }} />
-                    Предмет
-                  </p>
-                  <span className={styles.infoValue} style={{ fontSize: 16, fontWeight: 500 }}>
-                    {user.teacherSubject?.trim() || 'Не указано'}
                   </span>
                 </div>
               )}
@@ -458,72 +473,6 @@ export const Profile = ({ variant = 'student' }: ProfileProps) => {
         </div>
       </div>
 
-      {showSolutionHistory ? (
-        <div>
-          <div className={styles.historyHeader}>
-            <h2 className={styles.historyTitle}>
-              <History size={24} color="var(--primary-color)" />
-              История всех решений
-            </h2>
-            <button className={styles.filterBtn} type="button">
-              <Filter size={18} />
-            </button>
-          </div>
-
-          <div className={styles.tableContainer}>
-            <table className={styles.table}>
-              <thead>
-                <tr>
-                  <th>Название задачи</th>
-                  <th>Статус</th>
-                  <th>Язык</th>
-                  <th>Дата / Время</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {historyData.map((row) => (
-                  <tr key={row.id}>
-                    <td>{row.name}</td>
-                    <td>
-                      <span className={`${styles.statusBadge} ${row.status === 'OK' ? styles.statusOk : styles.statusError}`}>
-                        <span className={styles.statusDot} />
-                        {row.status}
-                      </span>
-                    </td>
-                    <td>
-                      <div className={styles.langInfo}>
-                        <span className={styles.statusDot} style={{ backgroundColor: row.langColor }} />
-                        {row.lang}
-                      </div>
-                    </td>
-                    <td>{row.date}</td>
-                    <td style={{ color: 'var(--text-secondary)', textAlign: 'right', cursor: 'pointer' }}>
-                      <CodeXml size={18} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-            <div className={styles.pagination}>
-              <span>Показано 4 из 158 попыток</span>
-              <div className={styles.pageControls}>
-                <button className={styles.pageBtn} type="button">
-                  Пред.
-                </button>
-                <button className={styles.pageBtn} type="button">
-                  След.
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <p className={styles.historyNote}>
-          История отправок решений отображается в кабинете студента. Здесь — только данные профиля.
-        </p>
-      )}
     </div>
   );
 };

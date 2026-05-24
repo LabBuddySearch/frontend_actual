@@ -9,7 +9,7 @@ export const studentRegisterSchema = z
     username: z.string().trim().min(1, 'Введите логин'),
     password: registerPasswordField,
     confirmPassword: z.string().min(1, 'Повторите пароль'),
-    groupCode: z.string().trim(),
+    groupCode: z.string().trim().min(1, 'Выберите группу'),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Пароли не совпадают',

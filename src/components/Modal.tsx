@@ -18,8 +18,8 @@ export function Modal({ isOpen, onClose, title, children, adminReportPrint }: Mo
     <div
       className={
         print
-          ? 'admin-report-print-modal fixed inset-0 z-50 flex items-center justify-center'
-          : 'fixed inset-0 z-50 flex items-center justify-center'
+          ? 'admin-report-print-modal fixed inset-0 z-50 flex items-center justify-center p-4'
+          : 'fixed inset-0 z-50 flex items-center justify-center p-4'
       }
     >
       <div
@@ -33,21 +33,31 @@ export function Modal({ isOpen, onClose, title, children, adminReportPrint }: Mo
       <div
         className={
           print
-            ? 'admin-report-print-modal-panel relative z-10 min-w-[300px] rounded-lg bg-surface-dark'
-            : 'relative z-10 min-w-[300px] rounded-lg bg-surface-dark'
+            ? 'admin-report-print-modal-panel relative z-10 flex max-h-[min(90vh,900px)] w-full max-w-3xl flex-col rounded-lg bg-surface-dark'
+            : 'relative z-10 flex max-h-[min(90vh,900px)] w-full max-w-3xl flex-col rounded-lg bg-surface-dark'
         }
       >
         <div
           className={
             print
-              ? 'admin-report-print-modal-chrome flex justify-between border-b-1 border-slate-600 p-6'
-              : 'flex justify-between border-b-1 border-slate-600 p-6'
+              ? 'admin-report-print-modal-chrome flex shrink-0 justify-between border-b-1 border-slate-600 p-6'
+              : 'flex shrink-0 justify-between border-b-1 border-slate-600 p-6'
           }
         >
           <span className="text-xl text-slate-100">{title}</span>
-          <XIcon className="text-slate-500 hover:text-slate-300 h-7 w-7" onClick={onClose} />
+          <button aria-label="Закрыть" className="border-0 bg-transparent p-0" type="button" onClick={onClose}>
+            <XIcon className="text-slate-500 hover:text-slate-300 h-7 w-7 cursor-pointer" />
+          </button>
         </div>
-        <div className={print ? 'admin-report-print-modal-body p-6' : 'p-6'}>{children}</div>
+        <div
+          className={
+            print
+              ? 'admin-report-print-modal-body overflow-y-auto p-6'
+              : 'overflow-y-auto p-6'
+          }
+        >
+          {children}
+        </div>
       </div>
     </div>
   );

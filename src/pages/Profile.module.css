@@ -29,12 +29,79 @@
   align-items: flex-start;
 }
 
+.avatarBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
 .avatarLg {
   width: 140px;
   height: 140px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); /* Красивый градиент вместо картинки */
+  background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 2px solid var(--input-border);
+}
+
+.avatarInitials {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.05em;
+}
+
+.avatarActions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 180px;
+}
+
+.avatarBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--input-border);
+  background: var(--bg-main, #0f172a);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.avatarBtn:hover:not(:disabled) {
+  border-color: var(--primary-color);
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.avatarBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.avatarBtnDanger:hover:not(:disabled) {
+  border-color: #f87171;
+  color: #fca5a5;
+}
+
+.avatarStubNote {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  max-width: 200px;
+  margin: 0;
 }
 
 .profileMain {

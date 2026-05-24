@@ -17,6 +17,8 @@ import { RoleProfilePage } from '@/pages/profile/RoleProfilePage';
 import { VerifyEmailPage } from '@/pages/verify-email/VerifyEmailPage';
 import { ForgotPasswordPage } from '@/pages/forgot-password/ForgotPasswordPage';
 import { TeacherTasksPage } from '@/pages/teacher/TeacherTasksPage';
+import { TeacherTaskFormPage } from '@/pages/teacher/TeacherTaskFormPage';
+import { TeacherGroupsPage } from '@/pages/teacher/TeacherGroupsPage';
 
 export const router = createBrowserRouter([
   { path: '/', element: <Navigate to="/login" replace /> },
@@ -48,6 +50,8 @@ export const router = createBrowserRouter([
       { index: true, element: <TeacherDashboardPage /> },
       { path: 'profile', element: <RoleProfilePage variant="teacher" /> },
       { path: 'tasks', element: <TeacherTasksPage /> },
+      { path: 'tasks/new', element: <TeacherTaskFormPage /> },
+      { path: 'groups', element: <TeacherGroupsPage /> },
     ],
   },
   {
